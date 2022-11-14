@@ -1,0 +1,131 @@
+#!/bin/bash
+mv ./wsps /usr/local/bin/ 2>/dev/null
+
+red='\033[33;31m'
+green='\033[33;32m'
+blue='\033[33;34m'
+white='\033[1;37m'
+
+echo -ne "$blue
+
+  ___       __   ________                 ________  ________      
+ |\  \     |\  \|\   ____\               |\   __  \|\   ____\ 
+ \ \  \    \ \  \ \  \___|_  ____________\ \  \|\  \ \  \___|_    
+  \ \  \  __\ \  \ \_____  \|\____________\ \   ____\ \_____  \  
+   \ \  \|\__\_\  \|____|\  \|____________|\ \  \___|\|____|\  \  
+    \ \____________\____\_\  \              \ \__\     ____\_\  \ 
+     \|____________|\_________\              \|__|    |\_________\ 
+                   \|_________|                       \|_________|
+                 ________  ___  ___  _________  ________     
+                |\   __  \|\  \|\  \|\___   ___\ \   __  \  
+                \ \  \|\  \ \  \ \  \|___ \  \_\  \  \|\  \  
+                 \ \   __  \ \  \ \  \   \ \  \ \  \  \ \  \  
+                  \ \  \ \  \ \  \ \  \   \ \  \ \  \  \ \  \  
+                   \ \__\ \__\ \_______\   \ \__\ \  \_______\ 
+                    \|__|\|__|\|_______|    \|__|  \|_______|
+ 
+                               ~ Developed by H0ru ~
+
+
+    [>] WSPS provides presets for:
+    [*] remmina
+    [*] rdesktop
+    [*] xfreerdp
+    [*] evil-winrm
+    [!] Necessary to have the programs for the correct functioning.
+\n"
+
+echo -e "$green"
+
+arr=('.' '..' '...' '   ')
+
+for c in $(seq 12); do
+        for elt in ${arr[*]}; do
+                echo -ne "\r\033[<1>A      Checking installed programs $elt" && sleep 0.08;
+        done
+done
+
+clear
+
+echo -e "$green"
+echo "    [>] Programs found: "
+echo "    [*] $(which remmina)"
+echo "    [*] $(which rdesktop)"
+echo "    [*] $(which xfreerdp)"
+echo "    [*] $(which evil-winrm)"
+
+echo -e "$white"
+echo "      Proceed? [Y/n]"
+     read RESPOSTA
+     test "$RESPOSTA" = "n" && exit
+
+PS3='Choice: '
+type=(
+"remmina VNC"
+"remmina RDP"
+"rdesktop"
+"xfreerdp"
+"evil-winrm"
+"Exit"
+)
+select var in "${type[@]}"; do
+  case $var in
+   "remmina VNC")
+     echo -e "$blue"
+     echo " [?] Structure: remmina -c vnc://<name>:<password>@<server>" 
+     echo -e "$green"
+     read -p "  Name: " rmvn
+     read -p "  Password: " rmvp
+     read -p "  Server: " rmvs
+     echo -e "$white"
+     remmina -c vnc://$rmvn:$rmvp@$rmvs
+     exit
+      ;;
+   "remmina RDP")
+     echo -e "$blue"
+     echo " [?] Structure: remmina -c rdp://<name>:<password>@<server>" 
+     echo -e "$green"
+     read -p "  Name: " rmrn
+     read -p "  Password: " rmrp
+     read -p "  Server: " rmrs
+     echo -e "$white"
+     remmina -c rdp://$rmrn:$rmrp@$rmrs 
+     exit
+      ;;      
+   "rdesktop")
+     echo -e "$blue"
+     echo "  [?] Structure: rdesktop -u <name> <ip> -r clipboard:PRIMARYCLIPBOARD"
+     echo -e "$green"
+     read -p "  Name: " rdnm
+     read -p "  IP: " rdip
+     echo -e "$white"
+     rdesktop -u $rdnm $rdip -r clipboard:PRIMARYCLIPBOARD 
+     exit
+      ;;
+   "xfreerdp")
+     echo -e "$blue"
+     echo "  [?] Structure: xfreerdp /u:<name> /p:<password> /v:<ip> +clipboard /dynamic-resolution /cert:ignore"
+     echo -e "$green"
+     read -p "  Name: " xfnm
+     read -p "  Password: " xfpw
+     read -p "  IP: "  xfip
+     echo -e "$white"
+     xfreerdp /u:$xfnm /p:$xfpw /v:$xfip +clipboard /dynamic-resolution /cert:ignore
+     exit
+     ;;
+   "evil-winrm")
+     echo -e "$blue"
+     echo "  [?] Structure: evil-winrm -i <ip> -u <name> -p <password>"
+     echo -e "$green"
+     read -p "  Name: " ewnm
+     read -p "  Password: " ewpw
+     read -p "  IP: " ewip
+     echo -e "$white"
+     evil-winrm -i $ewip -u $ewnm -p $ewpw
+     exit
+     ;;
+   "Exit")
+    exit
+     ;;
+   esac
+done
